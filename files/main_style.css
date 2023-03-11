@@ -17,7 +17,7 @@
  p { font-size: 13px; line-height: 180%; color:#464646; padding: .5em 0; }
  blockquote { font-style:italic; border-left:4px solid #92b4c6; margin:10px 0 10px 0; padding-left:20px; line-height:1.8; font-size:13px; color:#888; }
  #wsite-content { min-height:500px; }
- #header-wrap { text-align:center; padding-bottom:120px; }
+ #header-wrap { text-align:center; padding-bottom:80px; }
  #logo, #logo a { color:#000; font:600 30px 'Open Sans', sans-serif; text-transform:uppercase; letter-spacing:7px; z-index:2; position:relative; }
  #logo a:hover {}
  .logo-spacer { width:80px; height:5px; display:inline-block; background:#000; margin:8px 0 0; }
