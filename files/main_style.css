@@ -11,7 +11,7 @@
  p a:hover, h2 a:hover, h3 a:hover, .blog-comments-bottom a:hover { color: #3a7493; border-bottom:1px solid #8fb2c5; }
  h2 { font-size:17px ; padding: .5em 0 0.8em 0; letter-spacing:1px; line-height: 1.2; font-weight:400; color: #373737; }
  h2 a { color: #373737; }
- h3 { font-size:15px ; padding: .5em 0 0.8em 0; letter-spacing:1px; line-height: 1.2; font-weight:400; color: #373737; }
+ h3 { font-size:15px ; padding: .5em 0 0.8em 0; color: #373737; }
  h3 a { color: #373737; }
  div.paragraph { font-size: 13px; line-height: 180%; color:#464646; padding: .5em 0; }
  p { font-size: 13px; line-height: 180%; color:#464646; padding: .5em 0; }
