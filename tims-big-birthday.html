@@ -1,0 +1,942 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Tim's Big Birthday</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Hanken+Grotesk:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one narrow stage on a fog ground. Each scene is either a wrapped gift or a paperback page
+   whose choices say "turn to page N". Golden Gate palette: fog, bay ink, International Orange. */
+:root {
+  --fog: #E2E8EB;
+  --fog-2: #C8D3DA;
+  --page: #FBFCFB;
+  --ink: #15293A;
+  --ink-2: #4D5F6D;
+  --io: #C1432A;          /* International Orange, the bridge's color */
+  --io-soft: #C1432A1A;
+  --rule: #15293A1F;
+  --shadow: 0 1px 0 #15293A0F, 0 18px 40px -18px #15293A40;
+  /* physical objects keep their colors in both themes */
+  --ribbon: #F2F4F5;
+  --card: #F9FAF9;
+  --card-red: #B5302A;
+  --card-black: #15293A;
+  --felt: #1B3A52;
+  --felt-ink: #DCE6EC;
+  --chip-white: #EEF1F2;
+  --chip-yellow: #E9B93A;
+  --chip-orange: #DE7335;
+  --chip-red: #B5302A;
+
+  --display: "Gloock", "Iowan Old Style", Georgia, serif;
+  --body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+  --step-0: 1rem;
+  --step-1: 1.2rem;
+  --step-2: 1.6rem;
+  --step-3: clamp(1.9rem, 6vw, 2.6rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --fog: #0E1B26;
+    --fog-2: #1F3242;
+    --page: #15242F;
+    --ink: #E4EAEE;
+    --ink-2: #9AAEBB;
+    --io: #E5643F;
+    --io-soft: #E5643F24;
+    --rule: #E4EAEE1F;
+    --shadow: 0 1px 0 #0000004D, 0 18px 40px -18px #000000B3;
+    --felt: #112C40;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --fog: #0E1B26;
+  --fog-2: #1F3242;
+  --page: #15242F;
+  --ink: #E4EAEE;
+  --ink-2: #9AAEBB;
+  --io: #E5643F;
+  --io-soft: #E5643F24;
+  --rule: #E4EAEE1F;
+  --shadow: 0 1px 0 #0000004D, 0 18px 40px -18px #000000B3;
+  --felt: #112C40;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--fog);
+  background-image:
+    radial-gradient(120% 60% at 10% 0%, var(--fog-2) 0%, transparent 60%),
+    radial-gradient(90% 50% at 100% 100%, var(--fog-2) 0%, transparent 55%);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  padding-inline: 16px;
+  padding-block: 32px 64px;
+  min-height: 100vh;
+}
+.stage { max-width: 620px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1.12; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--io); outline-offset: 3px; border-radius: 4px; }
+
+/* ---------- Gift scenes ---------- */
+.unwrap {
+  display: flex; flex-direction: column; align-items: center; gap: 28px;
+  text-align: center; padding-block: 24px 8px;
+}
+.unwrap .kicker {
+  font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2);
+}
+.unwrap h1 { font-size: var(--step-3); max-width: 16ch; }
+.unwrap .note { color: var(--ink-2); max-width: 34ch; }
+
+.gift { position: relative; width: 220px; height: 250px; margin-top: 40px; }
+.gift .base, .gift .lid {
+  position: absolute; left: 0; right: 0;
+  background-color: var(--io);
+  background-image: repeating-linear-gradient(135deg, #FFFFFF14 0 2px, transparent 2px 14px);
+}
+.gift .base { bottom: 0; height: 176px; border-radius: 3px; box-shadow: var(--shadow); }
+.gift .lid {
+  bottom: 170px; left: -12px; right: -12px; height: 52px; border-radius: 4px;
+  box-shadow: 0 6px 10px -6px #00000059;
+  transition: transform 900ms cubic-bezier(.2,.7,.2,1), opacity 700ms ease 200ms;
+  z-index: 2;
+}
+.gift .base::before, .gift .lid::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 34px; transform: translateX(-50%);
+  background: var(--ribbon); box-shadow: inset 0 0 0 1px #00000010;
+}
+.bow { position: absolute; left: 50%; bottom: 100%; width: 0; height: 0; }
+.bow span {
+  position: absolute; bottom: -8px; width: 72px; height: 46px;
+  border: 11px solid var(--ribbon); border-radius: 50%;
+}
+.bow span:first-child { right: 2px; transform: rotate(-22deg); transform-origin: right bottom; }
+.bow span:last-child { left: 2px; transform: rotate(22deg); transform-origin: left bottom; }
+.bow i {
+  position: absolute; left: -15px; bottom: -12px; width: 30px; height: 24px; border-radius: 8px;
+  background: var(--ribbon); box-shadow: inset 0 -3px 0 #00000014;
+}
+.tag {
+  position: absolute; right: -54px; top: 92px; width: 92px; padding: 10px 8px 10px 18px;
+  background: var(--page); color: var(--ink); border-radius: 3px 10px 10px 3px;
+  font-family: var(--display); font-size: 1.05rem; line-height: 1.1;
+  transform: rotate(9deg); box-shadow: var(--shadow); z-index: 3;
+  transition: opacity 400ms ease;
+}
+.tag::before {
+  content: ""; position: absolute; left: 6px; top: 50%; width: 7px; height: 7px; margin-top: -3.5px;
+  border-radius: 50%; background: var(--fog); box-shadow: inset 0 0 0 1px var(--rule);
+}
+.tag small { display: block; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em; color: var(--ink-2); margin-top: 4px; }
+.gift.open .lid { transform: translate(40px, -180px) rotate(24deg); opacity: 0; }
+.gift.open .tag { opacity: 0; }
+.gift.open .base { animation: settle 500ms ease 150ms; }
+@keyframes settle { 40% { transform: translateY(6px) scaleY(.97); } }
+
+.gift.small { width: 150px; height: 170px; margin-top: 30px; }
+.gift.small .base { height: 116px; background-color: var(--felt); }
+.gift.small .lid { bottom: 112px; height: 38px; left: -9px; right: -9px; background-color: var(--felt); }
+.gift.small .base::before, .gift.small .lid::before { width: 24px; background: var(--io); }
+.gift.small .bow span { width: 52px; height: 34px; border-width: 8px; border-color: var(--io); }
+.gift.small .bow i { background: var(--io); width: 22px; left: -11px; height: 18px; bottom: -9px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--ink); color: var(--fog); border: 0; border-radius: 999px;
+  padding: 14px 26px; font-weight: 600; letter-spacing: 0.01em;
+  transition: transform 150ms ease, background 150ms ease;
+}
+.btn:hover { transform: translateY(-1px); background: var(--io); color: #fff; }
+.btn.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+.btn.ghost:hover { background: var(--ink); color: var(--fog); }
+.linkish {
+  background: none; border: 0; padding: 0; color: var(--ink-2);
+  font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.04em;
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.linkish:hover { color: var(--io); }
+
+/* ---------- Paperback pages ---------- */
+.page {
+  background: var(--page); box-shadow: var(--shadow); border-radius: 2px 6px 6px 2px;
+  padding: clamp(22px, 6vw, 48px) clamp(20px, 6vw, 52px) 24px;
+  display: flex; flex-direction: column; gap: 18px;
+  position: relative;
+  animation: turn 450ms cubic-bezier(.2,.7,.2,1);
+}
+.page::before { /* spine shading */
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 14px;
+  background: linear-gradient(90deg, var(--rule), transparent); border-radius: 2px 0 0 2px; pointer-events: none;
+}
+@keyframes turn { from { opacity: .3; transform: translateX(18px) rotateY(-6deg); } }
+.runhead {
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2);
+  padding-bottom: 12px; border-bottom: 1px solid var(--rule);
+}
+.eyebrow { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--io); }
+.page h2 { font-size: var(--step-3); }
+.page > p { max-width: 62ch; }
+.page .lede { font-size: var(--step-1); line-height: 1.5; }
+.fieldnotes {
+  font-family: var(--mono); font-size: 0.8rem; line-height: 1.7; color: var(--ink-2);
+  border-top: 1px dashed var(--rule); padding-top: 14px;
+  display: flex; flex-wrap: wrap; gap: 4px 18px;
+}
+.fieldnotes b { color: var(--ink); font-weight: 500; }
+
+.choices { display: flex; flex-direction: column; gap: 12px; margin-top: 6px; }
+.choices-label { font-style: italic; color: var(--ink-2); }
+.choice {
+  text-align: left; background: transparent; border: 1.5px solid var(--rule); border-radius: 10px;
+  padding: 16px 18px; display: flex; flex-direction: column; gap: 6px;
+  transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
+}
+.choice:hover { border-color: var(--io); background: var(--io-soft); transform: translateX(3px); }
+.choice .if { font-family: var(--display); font-size: var(--step-1); line-height: 1.3; }
+.choice .turn { font-family: var(--mono); font-size: 0.82rem; color: var(--io); letter-spacing: 0.02em; }
+.choice .desc { font-size: 0.92rem; color: var(--ink-2); }
+.choice.picked { border-color: var(--io); }
+
+.pagenav { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+.folio {
+  text-align: center; font-family: var(--mono); font-size: 0.78rem; color: var(--ink-2);
+  padding-top: 10px; font-variant-numeric: tabular-nums;
+}
+
+/* ---------- The end: itinerary stub ---------- */
+.stub {
+  border: 1.5px solid var(--ink); border-radius: 10px; overflow: hidden;
+  display: grid; grid-template-columns: auto 1fr;
+}
+.stub .side {
+  background: var(--io); color: #fff; writing-mode: vertical-rl; transform: rotate(180deg);
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 14px 10px; text-align: center;
+}
+.stub dl { margin: 0; padding: 6px 18px; display: grid; grid-template-columns: max-content 1fr; }
+.stub dt, .stub dd { padding-block: 12px; border-bottom: 1px dashed var(--rule); margin: 0; }
+.stub dt { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); padding-right: 18px; padding-top: 15px; }
+.stub dd { font-family: var(--display); font-size: var(--step-1); line-height: 1.3; }
+.stub dt:nth-last-of-type(1), .stub dd:last-of-type { border-bottom: 0; }
+
+.sendbox { display: flex; flex-direction: column; gap: 10px; }
+.sendbox label { font-weight: 600; }
+.sendbox textarea {
+  width: 100%; min-height: 128px; resize: vertical; padding: 12px 14px;
+  font-family: var(--mono); font-size: 0.85rem; line-height: 1.6;
+  background: var(--fog); color: var(--ink); border: 1px solid var(--rule); border-radius: 8px;
+}
+.sendrow { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.status { font-family: var(--mono); font-size: 0.8rem; color: var(--ink-2); }
+
+/* ---------- The second gift: a hand of cards ---------- */
+.table {
+  background: var(--felt); color: var(--felt-ink); border-radius: 18px;
+  padding: clamp(18px, 5vw, 32px); box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: 20px;
+  background-image: radial-gradient(80% 70% at 50% 40%, #FFFFFF12, transparent 70%);
+}
+.table .lbl { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; opacity: .7; }
+.row { display: flex; flex-direction: column; gap: 8px; }
+.cards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(6px, 2vw, 12px); }
+.cards.hand { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.pcard { aspect-ratio: 5 / 7; perspective: 700px; max-width: 100%; }
+.pcard .in {
+  position: relative; width: 100%; height: 100%; transform-style: preserve-3d;
+  transition: transform 700ms cubic-bezier(.3,.7,.2,1);
+}
+.pcard.up .in { transform: rotateY(180deg); }
+.pcard .face, .pcard .back {
+  position: absolute; inset: 0; border-radius: 7px; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+}
+.pcard .back {
+  background-color: var(--io);
+  background-image:
+    repeating-linear-gradient(45deg, #FFFFFF2E 0 2px, transparent 2px 9px),
+    repeating-linear-gradient(-45deg, #FFFFFF2E 0 2px, transparent 2px 9px);
+  box-shadow: inset 0 0 0 4px var(--card), 0 4px 10px -4px #00000080;
+}
+.pcard .face {
+  transform: rotateY(180deg); background: var(--card); color: var(--card-black);
+  box-shadow: 0 4px 10px -4px #00000080;
+  display: grid; place-items: center;
+}
+.pcard .face.red { color: var(--card-red); }
+.pcard .face b { font-family: var(--display); font-weight: 400; font-size: clamp(1.6rem, 8vw, 2.8rem); line-height: 1; }
+.pcard .face i {
+  position: absolute; font-style: normal; font-size: clamp(0.6rem, 2.4vw, 0.85rem); line-height: 1; text-align: center;
+  font-family: var(--mono);
+}
+.pcard .face i.tl { top: 6px; left: 6px; }
+.pcard .face i.br { bottom: 6px; right: 6px; transform: rotate(180deg); }
+.pcard.slot-empty { border: 1.5px dashed #FFFFFF2E; border-radius: 7px; }
+
+.chips { display: flex; justify-content: center; gap: clamp(10px, 4vw, 22px); flex-wrap: wrap; }
+.chipwrap { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.chip {
+  width: 58px; height: 58px; border-radius: 50%; border: 0; position: relative;
+  display: grid; place-items: center; color: #15293A; font-size: 0.8rem;
+  box-shadow: 0 4px 0 #00000059, inset 0 0 0 5px #FFFFFF59;
+  background: var(--c);
+  background-image: repeating-conic-gradient(from 0deg, #FFFFFF73 0 12deg, transparent 12deg 45deg);
+  transition: transform 150ms ease, opacity 200ms ease, box-shadow 150ms ease;
+}
+.chip span {
+  width: 36px; height: 36px; border-radius: 50%; background: var(--c); display: grid; place-items: center;
+  box-shadow: inset 0 0 0 1.5px #15293A33; font-family: var(--display); font-size: 1rem;
+}
+.chip:hover:not(:disabled) { transform: translateY(-3px); }
+.chip:disabled { cursor: default; }
+.chip.taken { transform: translateY(2px); box-shadow: 0 1px 0 #00000059, inset 0 0 0 5px #FFFFFF59; opacity: .45; }
+.chip:not(.taken):not(:disabled) { animation: nudge 1.8s ease-in-out infinite; }
+@keyframes nudge { 50% { box-shadow: 0 4px 0 #00000059, inset 0 0 0 5px #FFFFFF59, 0 0 0 7px #FFFFFF26; } }
+.chipwrap small { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: .75; }
+
+.reveal { display: flex; flex-direction: column; gap: 14px; text-align: left; animation: turn 500ms ease; }
+.reveal h2 { font-size: var(--step-3); }
+.reveal h2 em { font-style: normal; color: var(--io); }
+.signoff .heart { color: var(--io); }
+.signoff { font-family: var(--display); font-size: var(--step-2); line-height: 1.25; margin-top: 8px; }
+
+.tablewrap { width: 100%; max-width: 620px; text-align: left; display: flex; flex-direction: column; gap: 22px; }
+.unwrap.tight { padding: 0; gap: 12px; }
+#confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<canvas id="confetti" aria-hidden="true"></canvas>
+<main class="stage">
+
+  <!-- Scene: the first box -->
+  <section data-scene="box" class="unwrap">
+    <h1 id="hello">Happy birthday!</h1>
+    <div class="gift" id="gift1" aria-hidden="true">
+      <div class="lid"><div class="bow"><span></span><span></span><i></i></div></div>
+      <div class="base"></div>
+      <div class="tag">For you<small>DO NOT OPEN UNTIL YOUR BIRTHDAY</small></div>
+    </div>
+    <p class="note">It's your birthday. Go ahead.</p>
+    <button class="btn" id="openGift1" type="button">Pull the ribbon</button>
+  </section>
+
+  <!-- Page 1 -->
+  <section data-scene="p1" class="page" hidden>
+    <header class="runhead"><span>Tim's Big Birthday</span><span>Introduction</span></header>
+    <h2>Your present is an all inclusive day out in San Francisco.</h2>
+    <p class="lede">And you get to guide the activities! Make a choice on each page and at the end, send me the day you've made and I'll make it happen.</p>
+    <div class="pagenav">
+      <span></span>
+      <button class="btn" type="button" data-to="p4">Begin. Turn to page 4</button>
+    </div>
+    <footer class="folio">1</footer>
+  </section>
+
+  <!-- Page 4: morning -->
+  <section data-scene="p4" class="page" hidden>
+    <header class="runhead"><span>Tim's Big Birthday</span><span>Chapter one</span></header>
+    <p class="eyebrow">Morning</p>
+    <h2>The fog is burning off the bay.</h2>
+    <p class="lede">You're on the Embarcadero with a pastry. The water is flat, the gulls are loud, and the boats are loading. Where does the day begin?</p>
+    <div class="choices">
+      <button class="choice" type="button" data-choose="morning:alcatraz" data-to="p7">
+        <span class="if">If you board the ferry to Alcatraz,</span>
+        <span class="turn">turn to page 7 →</span>
+        <span class="desc">The island, the cellhouse and the audio tour. About three hours.</span>
+      </button>
+      <button class="choice" type="button" data-choose="morning:cruise" data-to="p12">
+        <span class="if">If you sail under the Golden Gate,</span>
+        <span class="turn">turn to page 12 →</span>
+        <span class="desc">A bay cruise past the bridge, the island and the skyline. About an hour.</span>
+      </button>
+      <button class="choice" type="button" data-choose="morning:both" data-to="p18">
+        <span class="if">If you refuse to choose and do both,</span>
+        <span class="turn">turn to page 18 →</span>
+        <span class="desc">The Rock in the morning, the cruise after lunch. A long, salty day.</span>
+      </button>
+    </div>
+    <div class="pagenav"><button class="linkish" type="button" data-back>Finger in the page? Go back</button></div>
+    <footer class="folio">4</footer>
+  </section>
+
+  <!-- Page 7: Alcatraz -->
+  <section data-scene="p7" class="page" hidden>
+    <header class="runhead"><span>Tim's Big Birthday</span><span>Chapter one</span></header>
+    <p class="eyebrow">Morning · The Rock</p>
+    <h2>The ferry pulls away from Pier 33.</h2>
+    <p class="lede">The city shrinks behind you. Fifteen minutes later you step onto Alcatraz.</p>
+    <p>You walk the cellhouse with headphones on while former guards and inmates describe life on the island. You stand in a cell. You look out through the bars at San Francisco, a little over a mile away. On quiet nights the inmates could hear the city from here.</p>
+    <div class="fieldnotes"><span><b>Federal prison</b> 1934–1963</span><span><b>Ferries</b> from Pier 33</span><span><b>Tickets</b> sell out, so I'll book early</span></div>
+    <div class="pagenav">
+      <button class="linkish" type="button" data-back>Finger in the page? Go back</button>
+      <button class="btn" type="button" data-to="p23">Turn to page 23</button>
+    </div>
+    <footer class="folio">7</footer>
+  </section>
+
+  <!-- Page 12: bay cruise -->
+  <section data-scene="p12" class="page" hidden>
+    <header class="runhead"><span>Tim's Big Birthday</span><span>Chapter one</span></header>
+    <p class="eyebrow">Morning · On the water</p>
+    <h2>You find a spot at the rail on the top deck.</h2>
+    <p class="lede">The boat swings west, and the bridge gets bigger and bigger until you're right underneath it.</p>
+    <p>You look straight up at the underside of the Golden Gate. The paint color is officially called International Orange. On the way back you loop around Alcatraz and watch the whole skyline line up behind the water. It's colder out here than you thought it would be. It always is.</p>
+    <div class="fieldnotes"><span><b>About</b> one hour</span><span><b>From</b> Fisherman's Wharf</span><span><b>Bring</b> a jacket</span></div>
+    <div class="pagenav">
+      <button class="linkish" type="button" data-back>Finger in the page? Go back</button>
+      <button class="btn" type="button" data-to="p23">Turn to page 23</button>
+    </div>
+    <footer class="folio">12</footer>
+  </section>
+
+  <!-- Page 18: both -->
+  <section data-scene="p18" class="page" hidden>
+    <header class="runhead"><span>Tim's Big Birthday</span><span>Chapter one</span></header>
+    <p class="eyebrow">Morning, and then some</p>
+    <h2>Why pick one boat when you can take two?</h2>
+    <p class="lede">You start on the Rock: the cellhouse, the audio tour, the view back at the city through the bars.</p>
+    <p>Back on the mainland, you grab lunch near the wharf and board again, this time for a cruise straight under the Golden Gate. By mid-afternoon you've seen Alcatraz from the inside and the bridge from below. You're windswept and very pleased with yourself.</p>
+    <div class="fieldnotes"><span><b>Alcatraz</b> about 3 hours</span><span><b>Cruise</b> about 1 hour</span><span><b>Lunch</b> in between</span></div>
+    <div class="pagenav">
+      <button class="linkish" type="button" data-back>Finger in the page? Go back</button>
+      <button class="btn" type="button" data-to="p23">Turn to page 23</button>
+    </div>
+    <footer class="folio">18</footer>
+  </section>
+
+  <!-- Page 23: afternoon -->
+  <section data-scene="p23" class="page" hidden>
+    <header class="runhead"><span>Tim's Big Birthday</span><span>Chapter two</span></header>
+    <p class="eyebrow">Afternoon</p>
+    <h2>In the Mission, the air smells like roasting cacao.</h2>
+    <p class="lede">Dandelion Chocolate makes its bars from two ingredients: cacao beans and cane sugar. Their factory is a few blocks away, and you're invited inside.</p>
+    <div class="choices">
+      <button class="choice" type="button" data-choose="afternoon:tour" data-to="p27">
+        <span class="if">If you tour the chocolate factory,</span>
+        <span class="turn">turn to page 27 →</span>
+        <span class="desc">Watch beans become bars, with tastings along the way.</span>
+      </button>
+      <button class="choice" type="button" data-choose="afternoon:class" data-to="p31">
+        <span class="if">If you tour the factory and stay for the truffle-making class,</span>
+        <span class="turn">turn to page 31 →</span>
+        <span class="desc">Then put on an apron and make your own truffles to take home.</span>
+      </button>
+      <button class="choice" type="button" data-choose="afternoon:open" data-to="p35">
+        <span class="if">If you walk past the chocolate and keep the afternoon open,</span>
+        <span class="turn">turn to page 35 →</span>
+        <span class="desc">A bold choice. Possibly the wrong one.</span>
+      </button>
+    </div>
+    <div class="pagenav"><button class="linkish" type="button" data-back>Finger in the page? Go back</button></div>
+    <footer class="folio">23</footer>
+  </section>
+
+  <!-- Page 27: factory tour -->
+  <section data-scene="p27" class="page" hidden>
+    <header class="runhead"><span>Tim's Big Birthday</span><span>Chapter two</span></header>
+    <p class="eyebrow">Afternoon · Bean to bar</p>
+    <h2>A guide hands you a cacao bean.</h2>
+    <p class="lede">It tastes nothing like chocolate yet. By the end of the hour, it will.</p>
+    <p>You follow the beans across the factory floor: sacks from single farms, the roaster, the machine that cracks them and blows the shells away, the stone grinders that slowly turn nibs into chocolate. You taste it at every stage, and you leave with a bag of bars that may or may not survive the walk to dinner.</p>
+    <div class="fieldnotes"><span><b>Bean-to-bar</b> since 2010</span><span><b>Ingredients</b> 2</span><span><b>Samples</b> plenty</span></div>
+    <div class="pagenav">
+      <button class="linkish" type="button" data-back>Finger in the page? Go back</button>
+      <button class="btn" type="button" data-to="p37">Turn to page 37</button>
+    </div>
+    <footer class="folio">27</footer>
+  </section>
+
+  <!-- Page 31: tour + truffle class -->
+  <section data-scene="p31" class="page" hidden>
+    <header class="runhead"><span>Tim's Big Birthday</span><span>Chapter two</span></header>
+    <p class="eyebrow">Afternoon · Hands-on</p>
+    <h2>After the tour, someone hands you an apron.</h2>
+    <p class="lede">You've seen how it's made. Now you make some.</p>
+    <p>You stir a ganache until it's glossy, scoop and roll it into rough little spheres, dip each one in tempered chocolate and roll it in cocoa. They look homemade, because they are. You eat one immediately to check quality. You box the rest. Some of them might even make it back to me.</p>
+    <div class="fieldnotes"><span><b>First</b> the factory tour</span><span><b>Then</b> the truffle class</span><span><b>Take home</b> everything you make</span></div>
+    <div class="pagenav">
+      <button class="linkish" type="button" data-back>Finger in the page? Go back</button>
+      <button class="btn" type="button" data-to="p37">Turn to page 37</button>
+    </div>
+    <footer class="folio">31</footer>
+  </section>
+
+  <!-- Page 35: open afternoon -->
+  <section data-scene="p35" class="page" hidden>
+    <header class="runhead"><span>Tim's Big Birthday</span><span>Chapter two</span></header>
+    <p class="eyebrow">Afternoon · Unscheduled</p>
+    <h2>You walk right past the chocolate factory.</h2>
+    <p class="lede">No plan. Just the city.</p>
+    <p>Maybe you stretch out on the grass at Dolores Park. Maybe you lose an hour in a bookstore, or climb a hill for a view. The afternoon is yours. The chocolate factory is still there, of course, if you have second thoughts.</p>
+    <div class="choices">
+      <button class="choice" type="button" data-back>
+        <span class="if">If you have second thoughts about the chocolate,</span>
+        <span class="turn">turn back to page 23 →</span>
+      </button>
+    </div>
+    <div class="pagenav">
+      <span></span>
+      <button class="btn" type="button" data-to="p37">Turn to page 37</button>
+    </div>
+    <footer class="folio">35</footer>
+  </section>
+
+  <!-- Page 37: ice cream interlude -->
+  <section data-scene="p37" class="page" hidden>
+    <header class="runhead"><span>Tim's Big Birthday</span><span>Interlude</span></header>
+    <p class="eyebrow">Late afternoon</p>
+    <h2>The sun comes out. You hear an ice cream scoop calling your name.</h2>
+    <p class="lede">Dinner is still a few hours away. There's a famous ice cream shop around the corner, and the line is only half a block long.</p>
+    <div class="choices">
+      <button class="choice" type="button" data-choose="icecream:yes" data-to="p38">
+        <span class="if">If you get in line for ice cream,</span>
+        <span class="turn">turn to page 38 →</span>
+        <span class="desc">Bi-Rite Creamery, then the grass at Dolores Park.</span>
+      </button>
+      <button class="choice" type="button" data-choose="icecream:no" data-to="p40">
+        <span class="if">If you save your appetite for dinner,</span>
+        <span class="turn">turn to page 40 →</span>
+        <span class="desc">Very disciplined. Nobody would blame you for changing your mind.</span>
+      </button>
+    </div>
+    <div class="pagenav"><button class="linkish" type="button" data-back>Finger in the page? Go back</button></div>
+    <footer class="folio">37</footer>
+  </section>
+
+  <!-- Page 38: ice cream -->
+  <section data-scene="p38" class="page" hidden>
+    <header class="runhead"><span>Tim's Big Birthday</span><span>Interlude</span></header>
+    <p class="eyebrow">Late afternoon · Two scoops</p>
+    <h2>You join the line outside Bi-Rite Creamery.</h2>
+    <p class="lede">It moves faster than it looks.</p>
+    <p>You order a scoop of salted caramel and a scoop of something you've never tried. You carry them a block up 18th Street to Dolores Park, find a spot on the hill, and eat them looking out over the skyline. It's your birthday, so it counts as a balanced meal.</p>
+    <div class="fieldnotes"><span><b>Since</b> 2006</span><span><b>The classic</b> salted caramel</span><span><b>Best eaten</b> on the grass</span></div>
+    <div class="pagenav">
+      <button class="linkish" type="button" data-back>Finger in the page? Go back</button>
+      <button class="btn" type="button" data-to="p40">Turn to page 40</button>
+    </div>
+    <footer class="folio">38</footer>
+  </section>
+
+  <!-- Page 40: evening -->
+  <section data-scene="p40" class="page" hidden>
+    <header class="runhead"><span>Tim's Big Birthday</span><span>Chapter three</span></header>
+    <p class="eyebrow">Evening</p>
+    <h2>The light goes gold. Time for dinner.</h2>
+    <p class="lede">You've earned a long, unhurried dinner. Do you stay in the city, or cross the bay?</p>
+    <div class="choices">
+      <button class="choice" type="button" data-choose="evening:city" data-to="p44">
+        <span class="if">If you stay in San Francisco,</span>
+        <span class="turn">turn to page 44 →</span>
+        <span class="desc">A really good dinner <span data-dinner-where>close to where your day ends</span>. No travel, no rush.</span>
+      </button>
+      <button class="choice" type="button" data-choose="evening:chez" data-to="p49">
+        <span class="if">If you cross the bay to Chez Panisse,</span>
+        <span class="turn">turn to page 49 →</span>
+        <span class="desc">Alice Waters' restaurant in Berkeley, cooking since 1971.</span>
+      </button>
+    </div>
+    <div class="pagenav"><button class="linkish" type="button" data-back>Finger in the page? Go back</button></div>
+    <footer class="folio">40</footer>
+  </section>
+
+  <!-- Page 44: dinner in SF -->
+  <section data-scene="p44" class="page" hidden>
+    <header class="runhead"><span>Tim's Big Birthday</span><span>Chapter three</span></header>
+    <p class="eyebrow">Evening · In the city</p>
+    <h2>You walk to dinner. The table is waiting.</h2>
+    <p class="lede">No bridges, no trains. Just a short walk <span data-dinner-where>from wherever the day left you</span>.</p>
+    <p>I'll book somewhere wonderful that fits the day you picked. You sit down, order something you wouldn't usually order, and tell the whole day back to yourself, course by course.</p>
+    <div class="fieldnotes"><span><b>Reservation</b> booked by me</span><span><b>Distance</b> walkable</span><span><b>Dress code</b> windswept is fine</span></div>
+    <div class="pagenav">
+      <button class="linkish" type="button" data-back>Finger in the page? Go back</button>
+      <button class="btn" type="button" data-to="p52">Turn to the last page</button>
+    </div>
+    <footer class="folio">44</footer>
+  </section>
+
+  <!-- Page 49: Chez Panisse -->
+  <section data-scene="p49" class="page" hidden>
+    <header class="runhead"><span>Tim's Big Birthday</span><span>Chapter three</span></header>
+    <p class="eyebrow">Evening · Across the bay</p>
+    <h2>You take BART under the bay to Berkeley.</h2>
+    <p class="lede">Then you walk up Shattuck Avenue to Chez Panisse.</p>
+    <p>Downstairs, the kitchen cooks one set menu each night from whatever is best that day, the way it has since Alice Waters opened the place in 1971. There's nothing to decide. That's the point. After a whole day of making choices, someone else makes the last one.</p>
+    <div class="fieldnotes"><span><b>Opened</b> 1971</span><span><b>Downstairs</b> one menu, changes nightly</span><span><b>Upstairs</b> the café</span></div>
+    <div class="pagenav">
+      <button class="linkish" type="button" data-back>Finger in the page? Go back</button>
+      <button class="btn" type="button" data-to="p52">Turn to the last page</button>
+    </div>
+    <footer class="folio">49</footer>
+  </section>
+
+  <!-- Page 52: the end -->
+  <section data-scene="p52" class="page" hidden>
+    <header class="runhead"><span>Tim's Big Birthday</span><span>The end</span></header>
+    <p class="eyebrow">The end</p>
+    <h2>This is the day you wrote.</h2>
+    <div class="stub">
+      <div class="side">Admit one · birthday</div>
+      <dl>
+        <dt>Morning</dt><dd id="sumMorning">Not chosen yet</dd>
+        <dt>Afternoon</dt><dd id="sumAfternoon">Not chosen yet</dd>
+        <dt>Treat</dt><dd id="sumIcecream">Not chosen yet</dd>
+        <dt>Evening</dt><dd id="sumEvening">Not chosen yet</dd>
+      </dl>
+    </div>
+    <div class="sendbox">
+      <label for="sendText">Send me your choices and I'll book everything.</label>
+      <textarea id="sendText" readonly></textarea>
+      <div class="sendrow">
+        <button class="btn" type="button" id="copyBtn">Copy my day</button>
+        <span class="status" id="copyStatus" role="status"></span>
+      </div>
+    </div>
+    <div class="pagenav">
+      <button class="linkish" type="button" id="rewrite">Rewrite the story from page 4</button>
+      <button class="btn ghost" type="button" data-to="gift">Wait. There's more</button>
+    </div>
+    <footer class="folio">52</footer>
+  </section>
+
+  <!-- Scene: the second box -->
+  <section data-scene="gift" class="unwrap" hidden>
+    <div id="gift2wrap" class="unwrap">
+      <p class="kicker">Epilogue</p>
+      <h1>One more box.</h1>
+      <p class="note">This one's for every game night after the big day.</p>
+      <div class="gift small" id="gift2" aria-hidden="true">
+        <div class="lid"><div class="bow"><span></span><span></span><i></i></div></div>
+        <div class="base"></div>
+      </div>
+      <button class="btn" id="openGift2" type="button">Open it</button>
+    </div>
+
+    <div id="tableWrap" class="tablewrap" hidden>
+      <div class="unwrap tight">
+        <p class="kicker">Epilogue</p>
+        <h1>It's a hand of cards.</h1>
+        <p class="note">In this game, nobody is allowed to say what they're holding. So I won't tell you either. Take the chips in order, white to red.</p>
+      </div>
+      <div class="table">
+        <div class="row">
+          <span class="lbl">The board</span>
+          <div class="cards" id="board"></div>
+        </div>
+        <div class="row">
+          <span class="lbl">Your hand</span>
+          <div class="cards hand" id="hand"></div>
+        </div>
+        <div class="chips" id="chips"></div>
+      </div>
+      <div class="reveal" id="reveal" hidden>
+        <h2>The Gang. <em>Deluxe edition.</em></h2>
+        <p>Deluxe edition, because you deserve the nice chips! We will have to plan a game night with Sam and Alaina.</p>
+        <p class="signoff">Happy birthday. I love you, and I can't wait for our day in the city.</p>
+        <p class="signoff" id="fromLine">Love, Kaley <span class="heart" aria-label="heart">&#9829;&#xFE0E;</span></p>
+        <div class="pagenav">
+          <button class="linkish" type="button" data-to="p52">Back to your itinerary</button>
+          <button class="linkish" type="button" id="replay">Wrap it all up again</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+// Personalize here: his name and yours. Leave blank to skip.
+const TO = "Tim";
+const FROM = "Kaley";
+
+const LABELS = {
+  morning: {
+    alcatraz: "Alcatraz: ferry and cellhouse tour",
+    cruise: "Bay cruise under the Golden Gate",
+    both: "Alcatraz, then a cruise under the Golden Gate"
+  },
+  afternoon: {
+    tour: "Dandelion Chocolate factory tour",
+    class: "Dandelion factory tour and truffle-making class",
+    open: "An open afternoon to wander"
+  },
+  icecream: {
+    yes: "Ice cream at Bi-Rite Creamery, eaten in Dolores Park",
+    no: "Saving room for dinner"
+  },
+  evening: {
+    city: "Dinner in San Francisco",
+    chez: "Dinner at Chez Panisse in Berkeley"
+  }
+};
+
+// Two cards in hand, then flop, turn, river. Together they spell THE GANG.
+const HAND = [{ l: "N", s: "♥", red: true }, { l: "G", s: "♠" }];
+const BOARD = [
+  { l: "T", s: "♣" }, { l: "H", s: "♥", red: true }, { l: "E", s: "♦", red: true },
+  { l: "G", s: "♣" }, { l: "A", s: "♠" }
+];
+const CHIPS = [
+  { c: "var(--chip-white)", name: "Pre-flop", reveal: [["hand", 0], ["hand", 1]] },
+  { c: "var(--chip-yellow)", name: "Flop", reveal: [["board", 0], ["board", 1], ["board", 2]] },
+  { c: "var(--chip-orange)", name: "Turn", reveal: [["board", 3]] },
+  { c: "var(--chip-red)", name: "River", reveal: [["board", 4]] }
+];
+
+const STORE_KEY = "tims-big-birthday-v2";
+const fresh = () => ({ scene: "box", morning: null, afternoon: null, icecream: null, evening: null, hist: [], chips: 0, gift2: false });
+let state = fresh();
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const reduced = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) return Object.assign(fresh(), JSON.parse(raw));
+  } catch (e) {}
+  return null;
+}
+
+function show(scene) {
+  $$("[data-scene]").forEach(el => { el.hidden = el.dataset.scene !== scene; });
+  state.scene = scene;
+  if (scene === "p52") fillSummary();
+  if (scene === "gift") applyGift2();
+  fillDynamic();
+  window.scrollTo({ top: 0, behavior: reduced() ? "auto" : "smooth" });
+  save();
+}
+function go(scene) {
+  if (state.scene && state.scene !== scene) state.hist.push(state.scene);
+  show(scene);
+}
+function back() {
+  const prev = state.hist.pop();
+  show(prev || "p1");
+}
+
+function dinnerWhere() {
+  if (state.afternoon === "tour" || state.afternoon === "class") return "in the Mission, a short walk from the chocolate factory";
+  if (state.icecream === "yes") return "in the Mission, a short walk from Dolores Park";
+  if (state.afternoon === "open") return "wherever your wandering afternoon ends";
+  return "close to where your day ends";
+}
+function fillDynamic() {
+  $$("[data-dinner-where]").forEach(el => { el.textContent = dinnerWhere(); });
+  $$(".choice[data-choose]").forEach(btn => {
+    const [k, v] = btn.dataset.choose.split(":");
+    btn.classList.toggle("picked", state[k] === v);
+  });
+}
+function fillSummary() {
+  const m = LABELS.morning[state.morning], a = LABELS.afternoon[state.afternoon],
+    ic = LABELS.icecream[state.icecream], e = LABELS.evening[state.evening];
+  $("#sumMorning").textContent = m || "Not chosen yet";
+  $("#sumAfternoon").textContent = a || "Not chosen yet";
+  $("#sumIcecream").textContent = ic || "Not chosen yet";
+  $("#sumEvening").textContent = e || "Not chosen yet";
+  $("#sendText").value =
+    "My birthday day in San Francisco:\n" +
+    "Morning: " + (m || "?") + "\n" +
+    "Afternoon: " + (a || "?") + "\n" +
+    "Treat: " + (ic || "?") + "\n" +
+    "Evening: " + (e || "?");
+  $("#copyStatus").textContent = "";
+}
+
+/* ---------- confetti, once, when the first box opens ---------- */
+function confetti() {
+  if (reduced()) return;
+  const cv = $("#confetti"), ctx = cv.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+  ctx.scale(dpr, dpr);
+  const css = getComputedStyle(document.documentElement);
+  const colors = ["--io", "--ribbon", "--fog-2", "--ink", "--chip-yellow"].map(v => css.getPropertyValue(v).trim());
+  const box = $("#gift1").getBoundingClientRect();
+  const ox = box.left + box.width / 2, oy = box.top + 40;
+  const bits = Array.from({ length: 140 }, () => ({
+    x: ox, y: oy,
+    vx: (Math.random() - 0.5) * 11, vy: -Math.random() * 13 - 4,
+    w: 5 + Math.random() * 6, h: 8 + Math.random() * 8,
+    r: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.3,
+    c: colors[Math.floor(Math.random() * colors.length)]
+  }));
+  const t0 = performance.now();
+  (function frame(t) {
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    bits.forEach(b => {
+      b.vy += 0.32; b.vx *= 0.99; b.x += b.vx; b.y += b.vy; b.r += b.vr;
+      ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.r);
+      ctx.fillStyle = b.c; ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h * Math.abs(Math.cos(b.r * 2)));
+      ctx.restore();
+    });
+    if (t - t0 < 3200) requestAnimationFrame(frame); else ctx.clearRect(0, 0, innerWidth, innerHeight);
+  })(t0);
+}
+
+/* ---------- the second gift ---------- */
+function cardEl(card) {
+  const el = document.createElement("div");
+  el.className = "pcard";
+  el.innerHTML =
+    '<div class="in"><div class="back"></div>' +
+    '<div class="face' + (card.red ? " red" : "") + '">' +
+    '<i class="tl">' + card.l + "<br>" + card.s + "</i><b>" + card.l + "</b>" +
+    '<i class="br">' + card.l + "<br>" + card.s + "</i></div></div>";
+  el.setAttribute("aria-label", "Face-down card");
+  el.dataset.letter = card.l;
+  return el;
+}
+function buildTable() {
+  const board = $("#board"), hand = $("#hand"), chips = $("#chips");
+  board.innerHTML = ""; hand.innerHTML = ""; chips.innerHTML = "";
+  BOARD.forEach(c => board.appendChild(cardEl(c)));
+  // hand cards sit in the middle of a five-wide grid so they match the board's card size
+  [null, HAND[0], HAND[1], null, null].forEach(c => {
+    if (c) hand.appendChild(cardEl(c));
+    else { const s = document.createElement("div"); s.className = "pcard"; s.style.visibility = "hidden"; hand.appendChild(s); }
+  });
+  CHIPS.forEach((chip, i) => {
+    const w = document.createElement("div");
+    w.className = "chipwrap";
+    w.innerHTML = '<button class="chip" type="button" style="--c:' + chip.c + '" aria-label="Take the ' + chip.name + ' chip"><span>★</span></button><small>' + chip.name + "</small>";
+    w.querySelector("button").addEventListener("click", () => takeChip(i));
+    chips.appendChild(w);
+  });
+}
+function cardAt(where, idx) {
+  const cards = $$(".pcard[data-letter]", where === "hand" ? $("#hand") : $("#board"));
+  return cards[idx];
+}
+function applyChips() {
+  $$(".chip", $("#chips")).forEach((b, i) => {
+    b.classList.toggle("taken", i < state.chips);
+    b.disabled = i !== state.chips;
+  });
+  CHIPS.forEach((chip, i) => chip.reveal.forEach(([w, idx]) => {
+    const c = cardAt(w, idx);
+    if (!c) return;
+    const up = i < state.chips;
+    c.classList.toggle("up", up);
+    c.setAttribute("aria-label", up ? "Card showing the letter " + c.dataset.letter : "Face-down card");
+  }));
+  $("#reveal").hidden = state.chips < CHIPS.length;
+}
+function takeChip(i) {
+  if (i !== state.chips) return;
+  state.chips = i + 1;
+  applyChips();
+  save();
+  if (state.chips === CHIPS.length) {
+    setTimeout(() => $("#reveal").scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "start" }), reduced() ? 0 : 800);
+  }
+}
+function applyGift2() {
+  $("#gift2wrap").hidden = state.gift2;
+  $("#tableWrap").hidden = !state.gift2;
+  if (state.gift2) applyChips();
+}
+
+/* ---------- wiring ---------- */
+function wire() {
+  $("#hello").textContent = TO ? "Happy birthday, " + TO + "!" : "Happy birthday!";
+  buildTable();
+
+  document.addEventListener("click", e => {
+    const t = e.target.closest("[data-to], [data-back]");
+    if (!t) return;
+    if (t.hasAttribute("data-back")) { back(); return; }
+    if (t.dataset.choose) {
+      const [k, v] = t.dataset.choose.split(":");
+      state[k] = v;
+    }
+    go(t.dataset.to);
+  });
+
+  $("#openGift1").addEventListener("click", () => {
+    const g = $("#gift1");
+    g.classList.add("open");
+    $("#openGift1").disabled = true;
+    confetti();
+    setTimeout(() => {
+      go("p1");
+      g.classList.remove("open");
+      $("#openGift1").disabled = false;
+    }, reduced() ? 0 : 1300);
+  });
+
+  $("#openGift2").addEventListener("click", () => {
+    $("#gift2").classList.add("open");
+    $("#openGift2").disabled = true;
+    setTimeout(() => {
+      state.gift2 = true;
+      $("#gift2").classList.remove("open");
+      $("#openGift2").disabled = false;
+      applyGift2();
+      save();
+    }, reduced() ? 0 : 1000);
+  });
+
+  $("#copyBtn").addEventListener("click", async () => {
+    const ta = $("#sendText"), status = $("#copyStatus");
+    try {
+      await navigator.clipboard.writeText(ta.value);
+      status.textContent = "Copied. Paste it into a text to me.";
+    } catch (err) {
+      ta.focus(); ta.select();
+      let ok = false;
+      try { ok = document.execCommand("copy"); } catch (e2) {}
+      status.textContent = ok ? "Copied. Paste it into a text to me." : "Selected. Copy it and paste it into a text to me.";
+    }
+  });
+
+  $("#rewrite").addEventListener("click", () => {
+    state.morning = state.afternoon = state.icecream = state.evening = null;
+    state.hist = ["p1"];
+    show("p4");
+  });
+
+  $("#replay").addEventListener("click", () => {
+    state = fresh();
+    applyChips();
+    show("box");
+  });
+}
+
+function start(restored) {
+  wire();
+  if (restored && restored.scene) {
+    // live update while the page is open: stay exactly where he was
+    state = Object.assign(fresh(), restored);
+  } else {
+    // a fresh visit always starts with the wrapped box; earlier choices stay remembered
+    const saved = load();
+    if (saved) state = Object.assign(saved, { scene: "box", hist: [], gift2: false, chips: 0 });
+  }
+  applyChips();
+  show(state.scene);
+}
+
+window.claude?.hot?.snapshot?.(() => state);
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+</script>
+
+</body></html>
